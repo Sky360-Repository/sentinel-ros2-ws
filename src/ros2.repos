@@ -24,3 +24,13 @@ repositories:
     type: git
     url: https://github.com/ros-perception/vision_opencv.git
     version: humble
+  ros2_video_streamer:
+    type: git
+    url: https://github.com/klintan/ros2_video_streamer.git
+    version: master
+    # Change 187 of camera_simulator.py to --> extra_args, unknown = parser.parse_known_args()
+  simple_launch:
+    type: git
+    url: https://github.com/oKermorgant/simple_launch.git
+    version: devel
+  

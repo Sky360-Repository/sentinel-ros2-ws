@@ -15,6 +15,7 @@ import yaml
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
+from simple_launch import SimpleLauncher
 
 def generate_launch_description():
 
@@ -30,30 +31,27 @@ def generate_launch_description():
 
     #ros2 launch sentinel_launch sentinel_launch.py
 
-    return LaunchDescription([
-        #Node(
-        #    package='camera_simulator',
-        #    ##namespace='sky360',
-        #    executable='camera_simulator',
-        #    #parameters = [config],
-        #    name='camera_simulator',
-        #    arguments={
-        #        '--type ':'video',
-        #        '--path ':'"/workspaces/sentinel-ros2-ws/src/sentinel_launch/videos/brad_drone_1.mp4"',
-        #        '--loop ':''
-        #    }.items()
-        #),
-        Node(
-            package='usb_cam',
-            ##namespace='sky360',
-            executable='usb_cam_node_exe',
-            parameters = [config],
-            name='usb_cam',
-        ),
-        Node(
-            package='usb_cam',
-            ##namespace='sky360',
-            executable='show_image.py',
-            name='usb_cam_show_image',
-        ),           
-    ])
+    sl = SimpleLauncher()
+
+    #sl.node(package='usb_cam', executable='usb_cam_node_exe', name='usb_cam', parameters = [config])
+    
+    sl.node(package='camera_simulator', executable='camera_simulator', name='camera_simulator', parameters = [config],
+      arguments=[
+        '--type', 'video', 
+        '--path', '/workspaces/sentinel-ros2-ws/src/sentinel_launch/videos/brad_drone_1.mp4', 
+        '--calibration_file', '/workspaces/sentinel-ros2-ws/src/sentinel_launch/config/camera_info.yaml',
+        '--loop'])
+    
+    sl.node(package='image_rotate', executable='image_rotate', name='image_rotate', parameters = [config],
+      remappings=[
+        ('image', '/camera/image'),
+        ('camera_info', '/image/camera_info')])
+
+    sl.node(package='image_view', executable='image_view', name='image_view', parameters = [config],
+      remappings=[('image', 'rotated/image')])
+
+    
+
+
+
+    return sl.launch_description()

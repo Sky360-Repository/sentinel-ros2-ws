@@ -2,3 +2,10 @@ build/*
 install/*
 log/*
 site/*
+
+src/image_common/*
+src/image_pipeline/*
+src/usb_cam/*
+src/vision_opencv/*
+src/ros2_video_streamer/*
+src/simple_launch/*
